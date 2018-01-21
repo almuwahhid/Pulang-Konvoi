@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="tandai tempat berkumpul dahulu"/>
+
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Tempat Berkumpul"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="20dip"
+        android:textSize="17dip"
+        android:textStyle="bold"
+        />
+
+
+    <Button android:id="@+id/btnTandaiKumpul"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tandai dalam peta"
+        android:textStyle="bold"
+        android:layout_marginBottom="15dp"
+        android:onClick="tandai"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/formLat"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/formLong"/>
+
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Tujuan Pulang Konvoi"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="20dip"
+        android:textSize="17dip"
+        android:textStyle="bold"
+        />
+
+    <EditText android:id="@+id/inputTujuanPulang"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:layout_marginBottom="15dip"
+        android:singleLine="true"
+        android:theme="@style/Base.V21.Theme.AppCompat.Light.Dialog"
+        />
+
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Jam Kumpul"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="20dip"
+        android:textSize="17dip"
+        android:textStyle="bold"
+        />
+
+    <EditText android:id="@+id/inputJamKumpul"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:layout_marginBottom="15dip"
+        android:inputType="time"
+        android:theme="@style/Base.V21.Theme.AppCompat.Light.Dialog"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+
+
+            <Button android:id="@+id/BatalSimJan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="batal"
+                android:textStyle="bold"
+                android:layout_marginBottom="15dp" />
+
+        <Button android:id="@+id/SimpanJan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Simpan"
+            android:textStyle="bold"
+            android:layout_marginBottom="15dp" />
+
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+</LinearLayout>

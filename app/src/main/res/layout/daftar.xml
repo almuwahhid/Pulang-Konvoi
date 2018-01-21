@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Nama Lengkap"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="20dip"
+        android:textSize="17dip"
+        android:textStyle="bold"
+        />
+
+    <EditText android:id="@+id/inputNama"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:layout_marginBottom="15dip"
+        android:theme="@style/Base.V21.Theme.AppCompat.Light.Dialog"
+        />
+
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Nama Pengguna"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="20dip"
+        android:textSize="17dip"
+        android:textStyle="bold"
+        />
+
+    <EditText android:id="@+id/inputNamaPeng"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:layout_marginBottom="15dip"
+        android:singleLine="true"
+        android:theme="@style/Base.V21.Theme.AppCompat.Light.Dialog"
+        />
+
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Alamat"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="20dip"
+        android:textSize="17dip"
+        android:textStyle="bold"
+        />
+
+    <EditText android:id="@+id/inputAlamat"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:layout_marginBottom="15dip"
+        android:singleLine="true"
+        android:theme="@style/Base.V21.Theme.AppCompat.Light.Dialog"
+        />
+
+    <TextView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="E-mail"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="20dip"
+        android:textSize="17dip"
+        android:textStyle="bold"
+        />
+
+    <EditText android:id="@+id/inputEmail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:layout_marginBottom="15dip"
+        android:inputType="textEmailAddress"
+        android:singleLine="true"
+        android:theme="@style/Base.V21.Theme.AppCompat.Light.Dialog"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+            <Button android:id="@+id/btnKeluarDaf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Keluar"
+                android:textStyle="bold"
+                android:layout_marginBottom="15dp" />
+
+
+            <Button android:id="@+id/btnSimpanDaf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Simpan"
+                android:textStyle="bold"
+                android:layout_marginBottom="15dp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
