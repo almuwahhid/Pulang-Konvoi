@@ -179,7 +179,7 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
                 Toast.makeText(Gabung.this, "Maaf Anda sudah mendaftar konvoi", Toast.LENGTH_SHORT).show();
             }
         }else {
-            Toast.makeText(Gabung.this, "Bermasalah dengan koneksi", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(Gabung.this, "Bermasalah dengan koneksi", Toast.LENGTH_SHORT).show();
         }
     }
 

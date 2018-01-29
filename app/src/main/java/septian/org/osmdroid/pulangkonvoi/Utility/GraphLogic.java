@@ -28,13 +28,14 @@ public class GraphLogic {
 
     public void make_first_jalur(){
         double temp_jarak = 9999999;
-        double temp_jarak_destination = 9999999;
+        double temp_jarak_destination = Converter.getDistancePlus(this.first_location, this.last_location, 0);
 
         Location last_loc = new Location("");
         Graph new_graph = null;
         for (int a=0; a<graphs.size();a++){
             last_loc.setLatitude(graphs.get(a).getStartlat());
             last_loc.setLongitude(graphs.get(a).getStartlong());
+
 
             if(Converter.getDistancePlus(last_loc, this.last_location, 0)<=temp_jarak_destination){
                 if(Converter.getDistancePlus(this.first_location, last_loc, 0)<=temp_jarak){
@@ -54,13 +55,14 @@ public class GraphLogic {
     }
 
     public boolean make_second_jalur(Graph graph_first){
-        double temp_jarak = 9999999;
-        double temp_jarak_destination = 9999999;
-
         Graph new_graph = null;
         Location first_loc = new Location("");
         first_loc.setLatitude(graph_first.getEndlat());
         first_loc.setLongitude(graph_first.getEndlong());
+
+        double temp_jarak = Converter.getDistancePlus(first_loc, this.last_location, 0);
+        double temp_jarak_destination = Converter.getDistancePlus(this.first_location, this.last_location, 0);
+
 
         for(int a=0;a<graphs.size();a++){
             if(graph_first.getUrutan_last() == graphs.get(a).getUrutan_first() || graph_first.getUrutan_first() == graphs.get(a).getUrutan_last()){
@@ -68,7 +70,7 @@ public class GraphLogic {
                 last_loc.setLatitude(graphs.get(a).getStartlat());
                 last_loc.setLongitude(graphs.get(a).getStartlong());
 
-                if(Converter.getDistancePlus(last_loc, this.last_location, 0)<=temp_jarak_destination){
+                if(Converter.getDistancePlus(last_loc, this.last_location, 0) <= temp_jarak_destination){
                     if(Converter.getDistancePlus(first_loc, last_loc, graphs.get(a).getHeuristik())<=temp_jarak){
                         temp_jarak = Converter.getDistancePlus(first_loc, last_loc, graphs.get(a).getHeuristik());
                         temp_jarak_destination = Converter.getDistancePlus(last_loc, this.last_location, 0);
@@ -78,9 +80,13 @@ public class GraphLogic {
             }
         }
 
-        if(graphs_astar.get(graphs_astar.size()-1).getId_node() != new_graph.getId_node()){
-            graphs_astar.add(new_graph);
-            return true;
+        if(new_graph!=null){
+            if(graphs_astar.get(graphs_astar.size()-1).getId_node() != new_graph.getId_node()){
+                graphs_astar.add(new_graph);
+                return true;
+            }else{
+                return false;
+            }
         }else{
             return false;
         }
@@ -92,8 +98,12 @@ public class GraphLogic {
         Log.d(TAG, "make_first_jalur: ");
         Graph before_last_node = graphs_astar.get(graphs_astar.size()-1);
 
-        Graph graph = new Graph(999, 0, before_last_node.getUrutan_last(), 999, before_last_node.getEndlat(), before_last_node.getEndlong(), this.last_location.getLatitude(), this.last_location.getLongitude());
+        Graph graph = new Graph(998, 0, before_last_node.getUrutan_last(), 998, before_last_node.getEndlat(), before_last_node.getEndlong(), this.last_location.getLatitude(), this.last_location.getLongitude());
         graphs_astar.add(graph);
+
+        /*Graph graph2 = new Graph(999, 0, 998, 999, this.last_location.getLatitude(), this.last_location.getLongitude(), this.last_location.getLatitude(), this.last_location.getLongitude());
+        graphs_astar.add(graph2);*/
+
     }
 
     public void makeAGraph(){

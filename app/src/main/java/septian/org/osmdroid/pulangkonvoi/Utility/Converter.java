@@ -39,4 +39,8 @@ public class Converter {
     public static double getDistancePlus(Location p1, Location p2, int heuristik){
         return  getDistance(p1, p2)+heuristik;
     }
+
+    public static double getBobotPlus(Double bobot, int heuristik){
+        return  bobot+heuristik;
+    }
 }

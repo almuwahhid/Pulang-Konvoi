@@ -41,17 +41,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import septian.org.osmdroid.pulangkonvoi.Kelas.GRoute;
 import septian.org.osmdroid.pulangkonvoi.Kelas.Graph;
 import septian.org.osmdroid.pulangkonvoi.LocalData.MyDatabase;
+import septian.org.osmdroid.pulangkonvoi.Services.Rute.RuteCallback;
+import septian.org.osmdroid.pulangkonvoi.Services.Rute.RuteService;
 import septian.org.osmdroid.pulangkonvoi.Utility.GraphLogic;
 
-public class MapPanduan extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, MapListener {
+public class MapPanduan extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, MapListener, RuteCallback {
     private MapView map;
     private LocationManager locationManager;
     private String provider;
     DbHelper dbHelper;
     Location location_direction;
     GraphLogic graphLogic;
+    List<GRoute> gRouteList;
+    private RuteService ruteService;
+    int total = 0;
+    int sum = 0;
+
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -65,6 +73,8 @@ public class MapPanduan extends AppCompatActivity implements GoogleApiClient.Con
         getSupportActionBar().setDisplayOptions(
                 ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
         getSupportActionBar().setTitle("Panduan Konvoi");
+        gRouteList = new ArrayList<>();
+
         setContentView(R.layout.activity_map_panduan);
         setLocation_direction();
 
@@ -132,6 +142,9 @@ public class MapPanduan extends AppCompatActivity implements GoogleApiClient.Con
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         setMyLocation();
+        makeAGraph();
+        Log.d(".asdku", "onConnected: "+graphLogic.getGraphs_astar().size());
+        initMarker(graphLogic.getGraphs_astar());
         setMarker(myLocation, 0);
         setMarker(location_direction, 1);
     }
@@ -157,8 +170,20 @@ public class MapPanduan extends AppCompatActivity implements GoogleApiClient.Con
         Log.d("map", "setMyLocation: "+myLocation.getLatitude());
     }
 
+    private void initRouteFromService(ArrayList<Graph> graphs){
 
-    private void initRute(ArrayList<Graph> graphs) {
+        for(Graph graph:graphs){
+            /*GRoute gr = new GRoute();
+            gr.setLat(graph.getStartlat());
+            gr.setLng(graph.getStartlong());
+            gRouteList.add(gr);*/
+            new RuteService(this, this, graph.getStartlat(), graph.getStartlong(), graph.getEndlat(), graph.getEndlong());
+            /*if(graph.getStartlat()!=graph.getEndlat() && graph.getStartlong()!=graph.getEndlong() ){
+            }*/
+        }
+    }
+
+    private void initGRoutes(List<GRoute> gRoutes) {
         Polyline line = new Polyline();
         line.setTitle("Rute");
         line.setSubDescription(Polyline.class.getCanonicalName());
@@ -166,8 +191,9 @@ public class MapPanduan extends AppCompatActivity implements GoogleApiClient.Con
         line.setColor(Color.GRAY);
         List<GeoPoint> pts = new ArrayList<>();
 
-        for(Graph graph:graphs){
-            pts.add(new GeoPoint(graph.getStartlat(), graph.getEndlong()));
+        for(GRoute gRoute : gRoutes){
+            pts.add(new GeoPoint(gRoute.getLat(), gRoute.getLng()));
+            Log.d(".asdruteku", "initGRoutes: "+gRoute.getLat()+", "+gRoute.getLng());
         }
 
         /*pts.add(new GeoPoint(40.796788, -73.949232));
@@ -179,6 +205,40 @@ public class MapPanduan extends AppCompatActivity implements GoogleApiClient.Con
         line.setGeodesic(true);
         map.getOverlayManager().add(line);
 //        map.setMaxZoomLevel(22.0);
+    }
+
+
+    private void initRute(ArrayList<Graph> graphs) {
+        Polyline line = new Polyline();
+        line.setTitle("Rute");
+        line.setSubDescription(Polyline.class.getCanonicalName());
+        line.setWidth(10f);
+        line.setColor(Color.GRAY);
+        List<GeoPoint> pts = new ArrayList<>();
+
+        for(Graph graph:graphs){
+            pts.add(new GeoPoint(graph.getStartlat(), graph.getStartlong()));
+        }
+
+        /*pts.add(new GeoPoint(40.796788, -73.949232));
+        pts.add(new GeoPoint(40.796788, -73.981762));
+        pts.add(new GeoPoint(40.768094, -73.981762));
+        pts.add(new GeoPoint(40.768094, -73.949232));
+        pts.add(new GeoPoint(40.796788, -73.949232));*/
+        line.setPoints(pts);
+        line.setGeodesic(true);
+        map.getOverlayManager().add(line);
+//        map.setMaxZoomLevel(22.0);
+    }
+
+    private void initMarker(ArrayList<Graph> graphs){
+        for(Graph graph:graphs){
+            Location l = new Location("");
+            l.setLatitude(graph.getStartlat());
+            l.setLongitude(graph.getStartlong());
+            setMarker(l, -1);
+//            pts.add(new GeoPoint(graph.getStartlat(), graph.getStartlong()));
+        }
     }
 
     protected synchronized void buildGoogleApiClient(){
@@ -233,29 +293,46 @@ public class MapPanduan extends AppCompatActivity implements GoogleApiClient.Con
             marker.setDraggable(true);
             map.getOverlays().add(marker);
 
-        }else{
-
+        }else if(a==-1) {
             Marker marker = new Marker(map);
             marker.setDraggable(false);
             marker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            marker.setIcon(getResources().getDrawable(R.drawable.marker));
-            marker.setTitle("Lokasi Kumpul Konvoi");
+            marker.setIcon(getResources().getDrawable(android.R.drawable.ic_menu_mylocation));
+            marker.setTitle("titik");
             marker.setDraggable(true);
             map.getOverlays().add(marker);
+        }else{
+                Marker marker = new Marker(map);
+                marker.setDraggable(false);
+                marker.setPosition(new GeoPoint(location.getLatitude(), location.getLongitude()));
+                marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                marker.setIcon(getResources().getDrawable(R.drawable.marker));
+                marker.setTitle("Lokasi Kumpul Konvoi");
+                marker.setDraggable(true);
+                map.getOverlays().add(marker);
 
             /*final Drawable marker = getApplicationContext().getResources().getDrawable(R.drawable.marker);
             ArrayList<OverlayItem> overlayArray = new ArrayList<>();
             OverlayItem mapItem = new OverlayItem("Lokasi Kumpul Konvoi", "", gp);
             mapItem.setMarker(marker);
             overlayArray.add(mapItem);*/
-        }
 
+        }
+    }
+
+    private void makeAGraph(){
         graphLogic = new GraphLogic(myLocation, location_direction, new MyDatabase(this).graphs());
         graphLogic.makeAGraph();
 
-        initRute(graphLogic.getGraphs_astar());
-//        Log.d("asd", "setMarker: "+graphLogic.getGraphs_astar().size());
+        for(Graph g : graphLogic.getGraphs_astar()){
+            Log.d(".asd", "setMarker: "+g.getUrutan_first()+" - "+g.getUrutan_last());
+            Log.d(".asd", "setFirstLocation: "+g.getStartlat()+" - "+g.getStartlong());
+            Log.d(".asd", "setLastLocation: "+g.getEndlat()+" - "+g.getEndlong());
+        }
+
+        sum = graphLogic.getGraphs_astar().size();
+        initRouteFromService(graphLogic.getGraphs_astar());
     }
 
     @Override
@@ -272,5 +349,22 @@ public class MapPanduan extends AppCompatActivity implements GoogleApiClient.Con
     @Override
     public boolean onZoom(ZoomEvent event) {
         return false;
+    }
+
+    @Override
+    public void setMarker(String jarak, List<GRoute> routes, Location l, int status) {
+        if(status==1){
+            ++total;
+            for(GRoute g:routes){
+                gRouteList.add(g);
+            }
+            /*GRoute gr = new GRoute();
+            gr.setLat(l.getLatitude());
+            gr.setLng(l.getLongitude());
+            gRouteList.add(gr);*/
+            if(total==sum){
+                initGRoutes(this.gRouteList);
+            }
+        }
     }
 }
