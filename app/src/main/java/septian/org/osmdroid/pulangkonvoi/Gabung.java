@@ -192,7 +192,7 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
         }
     }
 
-    class SimpanGabung extends AsyncTask<String, String, String> {
+    class SimpanGabung extends AsyncTask<String, String, Boolean> {
 
             @Override
             protected void onPreExecute() {
@@ -201,10 +201,10 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
             }
 
             // menambah data
-            protected String doInBackground(String... args) {
+            protected Boolean doInBackground(String... args) {
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-                params.add(new BasicNameValuePair("idJan", idJan));
+                params.add(new BasicNameValuePair("idJan", String.valueOf(id_janjian)));
                 params.add(new BasicNameValuePair("namaPeng", username));
 
 
@@ -224,18 +224,24 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
                         startActivity(i);
 
                         // tutup activity ini
-                        finish();
+                        return true;
+
                     } else {
                         // jika gagal dalam menambah data
-                        Toast.makeText(getApplicationContext(),"Gagal Simpan", Toast.LENGTH_LONG).show();
+                        return false;
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                return null;
+             return false;
             }
 
-            protected void onPostExecute(String file_url) {
+            protected void onPostExecute(Boolean a) {
+                if(a)
+                    finish();
+                else
+                    Toast.makeText(getApplicationContext(),"Gagal Simpan", Toast.LENGTH_LONG).show();
 
                 pDialog.dismiss();
             }
