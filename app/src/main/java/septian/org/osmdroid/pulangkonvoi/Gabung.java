@@ -36,11 +36,13 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
     TextView vTuj, vjam, vIdGab,vLatGab,vLongGab, vKoorGab,vStatGab;
     Button btnGabung , btnBatal;
 
-    String idJan,namaTujuan,jam,latitude,longitude,koordinator,status;
+    String idJanjian,namaTujuan,jam,latitude,longitude,koordinator,status;
 
     String username;
     int id_janjian;
     private ProgressDialog pDialog;
+
+    private boolean isGabung = false;
 
 
     private static String url_gabung = "http://septianskripsi.hol.es/gabung.php";
@@ -81,7 +83,8 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
         btnBatal = (Button) findViewById(R.id.btnBatalGab);
 
         Bundle dataGabung = getIntent().getExtras();
-        idJan = dataGabung.getString(TAG_IDJAN);
+        idJanjian = dataGabung.getString(TAG_IDJAN);
+        Log.d("tes", "onCreate: "+idJanjian);
         namaTujuan = dataGabung.getString(TAG_TUJUAN);
         jam = dataGabung.getString(TAG_JAM);
         latitude = dataGabung.getString(TAG_LAT);
@@ -91,7 +94,7 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
 
         vTuj.setText(namaTujuan);
         vjam.setText(jam);
-        vIdGab.setText(idJan);
+        vIdGab.setText(idJanjian);
         vLatGab.setText(latitude);
         vLongGab.setText(longitude);
         vKoorGab.setText(koordinator);
@@ -128,7 +131,7 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
         Log.d("asd", "params: "+new LoginPref(this).getUsername());
         Log.d("asd", "params id: "+String.valueOf(UserPref.getAlamat(this)));
         jsonBody.put("id", String.valueOf(UserPref.getIdPeng(this)));
-        jsonBody.put("idJan", String.valueOf(id_janjian));
+        jsonBody.put("idJan", idJanjian);
         return jsonBody;
     }
 
@@ -145,9 +148,13 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
     @Override
     public void IsGabung(Boolean isgabung, int status, int idPeng, int idJan) {
         pDialog.hide();
+        isGabung = isgabung;
         if(status!=0){
             if(isgabung){
-                if(id_janjian==idJan && idPeng == UserPref.getIdPeng(Gabung.this)){
+                Log.d("shit", "IsGabung: "+idJan+" "+idPeng);
+                Log.d("shit", "IsGabung2: "+idJanjian+" "+UserPref.getIdPeng(Gabung.this));
+                if(Integer.valueOf(idJanjian)==idJan && idPeng == UserPref.getIdPeng(Gabung.this)){
+                    Log.d("fuck", "IsGabung: "+status);
                     switch (status){
                         case 2:
                             btnGabung.setVisibility(View.GONE);
@@ -171,7 +178,7 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
             finish();
         }
 
-        if(status==1){
+        /*if(status==1){
             if (!isgabung){
                 new SimpanGabung().execute();
             }else {
@@ -180,7 +187,7 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
             }
         }else {
 //            Toast.makeText(Gabung.this, "Bermasalah dengan koneksi", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
     @Override
@@ -204,8 +211,8 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
             protected Boolean doInBackground(String... args) {
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-                params.add(new BasicNameValuePair("idJan", String.valueOf(id_janjian)));
-                params.add(new BasicNameValuePair("namaPeng", username));
+                params.add(new BasicNameValuePair("idJan", idJanjian));
+                params.add(new BasicNameValuePair("idPeng", String.valueOf(UserPref.getIdPeng(Gabung.this))));
 
 
                 JSONObject json = jsonParser.makeHttpRequest(url_gabung,
