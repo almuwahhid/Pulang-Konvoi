@@ -25,15 +25,14 @@
         android:name="android.hardware.wifi"
         android:required="false" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name="septian.org.osmdroid.pulangkonvoi.Splashscreen"
+        <activity
+            android:name=".Splashscreen"
             android:noHistory="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -41,28 +40,27 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-
         </activity>
-        <activity android:name="septian.org.osmdroid.pulangkonvoi.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name="septian.org.osmdroid.pulangkonvoi.FormJanjianActivity" />
-        <activity android:name="septian.org.osmdroid.pulangkonvoi.MapsOsmActivity" />
-        <activity android:name="septian.org.osmdroid.pulangkonvoi.Gabung"
-            android:label="Gabung Janjian"/>
-        <activity android:name="septian.org.osmdroid.pulangkonvoi.MapPanduan" />
-        <activity android:name="septian.org.osmdroid.pulangkonvoi.Daftar" />
-        <activity android:name="septian.org.osmdroid.pulangkonvoi.MenuUtama"
-            android:label="@string/app_name"/>
-        <activity android:name="septian.org.osmdroid.pulangkonvoi.DetailJanjian"
-            android:label="@string/app_name"/>
-        <activity android:name="septian.org.osmdroid.pulangkonvoi.ListJanjian"
-            android:label="List Janjian"/>
-
-
-
-
-
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".FormJanjianActivity" />
+        <activity android:name=".MapsOsmActivity" />
+        <activity
+            android:name=".Gabung"
+            android:label="Gabung Janjian" />
+        <activity android:name=".MapPanduan" />
+        <activity android:name=".Daftar" />
+        <activity
+            android:name=".MenuUtama"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".DetailJanjian"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".ListJanjian"
+            android:label="List Janjian" />
+        <activity android:name=".GabungAdapter"></activity>
     </application>
 
 </manifest>

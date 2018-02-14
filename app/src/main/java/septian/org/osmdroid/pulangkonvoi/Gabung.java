@@ -8,10 +8,13 @@ import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,16 +28,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import septian.org.osmdroid.pulangkonvoi.Kelas.User;
 import septian.org.osmdroid.pulangkonvoi.Preferences.LoginPref;
 import septian.org.osmdroid.pulangkonvoi.Preferences.UserPref;
 import septian.org.osmdroid.pulangkonvoi.Services.BatalGabung.BatalGabungService;
 import septian.org.osmdroid.pulangkonvoi.Services.CekGabung.CekGabungService;
+import septian.org.osmdroid.pulangkonvoi.Services.DaftarMember.DaftarMember;
 
 public class Gabung extends AppCompatActivity implements CekGabungService.CekGabung, BatalGabungService.BatalGabung{
     LoginPref loginPref;
 
-    TextView vTuj, vjam, vIdGab,vLatGab,vLongGab, vKoorGab,vStatGab;
+    TextView vTuj, vjam, vIdGab,vLatGab,vLongGab, vKoorGab,vStatGab, tv_nomember;
     Button btnGabung , btnBatal;
+    RecyclerView recyclerView;
+    LinearLayout lay_user;
 
     String idJanjian,namaTujuan,jam,latitude,longitude,koordinator,status;
 
@@ -43,6 +50,8 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
     private ProgressDialog pDialog;
 
     private boolean isGabung = false;
+    List<User> users;
+    GabungAdapter gabungAdapter;
 
 
     private static String url_gabung = "http://septianskripsi.hol.es/gabung.php";
@@ -71,7 +80,10 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
 
         id_janjian = getIntent().getIntExtra("idJan", 0);
 
+        lay_user = findViewById(R.id.lay_user);
+        recyclerView = findViewById(R.id.recyclerView);
         vTuj = (TextView) findViewById(R.id.viewTujuanGab);
+        tv_nomember = (TextView) findViewById(R.id.tv_nomember);
         vjam = (TextView) findViewById(R.id.viewJamGab);
         vIdGab = (TextView) findViewById(R.id.idGab);
         vLatGab = (TextView) findViewById(R.id.latGab);
@@ -91,6 +103,12 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
         longitude = dataGabung.getString(TAG_LONG);
         koordinator = dataGabung.getString(TAG_KOOR);
         status = dataGabung.getString(TAG_STATUS);
+
+        users = new ArrayList<>();
+        gabungAdapter = new GabungAdapter(this, users);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(gabungAdapter);
 
         vTuj.setText(namaTujuan);
         vjam.setText(jam);
@@ -163,6 +181,8 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
                         case 3:
                             btnGabung.setVisibility(View.GONE);
                             btnBatal.setVisibility(View.GONE);
+                            lay_user.setVisibility(View.VISIBLE);
+                            tampilUser(idJanjian);
                             break;
                     }
                 }else{
@@ -188,6 +208,24 @@ public class Gabung extends AppCompatActivity implements CekGabungService.CekGab
         }else {
 //            Toast.makeText(Gabung.this, "Bermasalah dengan koneksi", Toast.LENGTH_SHORT).show();
         }*/
+    }
+
+    private void tampilUser(String idJanjian) {
+        new DaftarMember(Gabung.this, new DaftarMember.ListMember() {
+            @Override
+            public void onListMember(List<User> memberList, int status) {
+                if(status==1){
+                    for(User user:memberList){
+                        users.add(user);
+                        gabungAdapter.notifyDataSetChanged();
+                    }
+                }else if(status==2){
+                    tv_nomember.setVisibility(View.VISIBLE);
+                }else{
+                    Toast.makeText(Gabung.this, "Bermasalah dengan koneksi", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, Integer.valueOf(idJanjian));
     }
 
     @Override

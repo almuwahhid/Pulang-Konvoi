@@ -14,6 +14,7 @@ public class Konstanta {
     public static String detailUser = base_url+"detailPengguna.php";
     public static String updateKonvoi = base_url+"updateKonvoi.php";
     public static String batalgabung = base_url+"batalGabung.php";
+    public static String listMember = base_url+"listJanjian.php";
     public static final String URL_DIRECTION(Double lat1, Double lat2, Double lng1, Double lng2){
         String str_origin = "origin="+lat1+","+lng1;
         String str_dest = "destination="+lat2+","+lng2;
